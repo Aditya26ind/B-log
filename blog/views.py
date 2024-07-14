@@ -10,7 +10,12 @@ from django.contrib.auth.forms import AuthenticationForm
 from .forms import SignUpForm, PostForm, CommentForm
 
 def home(request):
-    posts = Post.objects.all().order_by('-published_date')
+    query = request.GET.get('q')
+    print(query)
+    if query:
+        posts = Post.search(query)
+    else:
+        posts = Post.objects.all()
     return render(request, 'blog/home.html', {'posts': posts})
 def custom_logout(request):
     logout(request)
@@ -49,6 +54,7 @@ def login(request):
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
             user = authenticate(username=username, password=password)
+            print(user.username)
             if user is not None:
                 auth_login(request, user)
                 return redirect('home')
@@ -56,7 +62,7 @@ def login(request):
         form = AuthenticationForm()
     return render(request, 'blog/login.html', {'form': form})
 
-# @login_required
+@login_required
 def post_create(request):
     if request.method == 'POST':
         form = PostForm(request.POST)
@@ -69,3 +75,10 @@ def post_create(request):
     else:
         form = PostForm()
     return render(request, 'blog/post_form.html', {'form': form})
+
+@login_required
+def profile(request):
+    if request.user.is_authenticated:
+        print(request.user)
+        posts = Post.objects.filter(author__username=request.user.username).order_by('-published_date')
+    return render(request, 'blog/profile.html', {'posts': posts})

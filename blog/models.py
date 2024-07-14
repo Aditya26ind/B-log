@@ -13,7 +13,11 @@ class Post(models.Model):
         if not self.slug:
             self.slug = slugify(self.title)
         super().save(*args, **kwargs)
-
+    
+    @staticmethod
+    def search(query):
+        return Post.objects.filter(title__icontains=query).order_by("-published_date") | Post.objects.filter(content__icontains=query).order_by("-published_date")    
+    
     def __str__(self):
         return self.title
 

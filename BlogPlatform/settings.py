@@ -84,12 +84,21 @@ WSGI_APPLICATION = 'BlogPlatform.wsgi.application'
 import dj_database_url
 
 # Replace the DATABASES section with PostgreSQL configuration
-DATABASES = {
+
+if os.getenv("ENVIRONMENT")=="PRODUCTION":
+    DATABASES = {
     'default': dj_database_url.config(
         default='postgresql://aditya:BU7bk1YznVry@ep-tight-glade-15655584.us-east-2.aws.neon.tech:5432/localtest',
         conn_max_age=600
     )
 }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 
 # Password validation
