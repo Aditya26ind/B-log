@@ -1,12 +1,12 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# Exit on error
+set -o errexit
 
-# Build the project
-echo "Building the project..."
-python3.9 -m pip install -r requirements.txt
+# Modify this line as needed for your package manager (pip, poetry, etc.)
+pip install -r requirements.txt
 
-echo "Make Migration..."
-python3.9 manage.py makemigrations --noinput
-python3.9 manage.py migrate --noinput
+# Convert static asset files
+python manage.py collectstatic --no-input
 
-echo "Collect Static..."
-python3.9 manage.py collectstatic --noinput --clear
+# Apply any outstanding database migrations
+python manage.py migrate
