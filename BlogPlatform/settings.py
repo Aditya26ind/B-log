@@ -80,12 +80,15 @@ WSGI_APPLICATION = 'BlogPlatform.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
+# Import dj_database_url at the beginning of the file
+import dj_database_url
 
+# Replace the DATABASES section with PostgreSQL configuration
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(
+        default='postgresql://aditya:BU7bk1YznVry@ep-tight-glade-15655584.us-east-2.aws.neon.tech:5432/localtest',
+        conn_max_age=600
+    )
 }
 
 
